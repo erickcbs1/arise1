@@ -3,144 +3,149 @@ print("Iniciando...")
 -- Criação da GUI
 local gui = {}
 local funcs = {}
+local isFlying = false
+local noclipActive = false
 
 function gui:Setup(funcs)
     local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
     local Frame = Instance.new("Frame", ScreenGui)
-    Frame.Size = UDim2.new(0, 350, 0, 500)
-    Frame.Position = UDim2.new(0.5, -175, 0.5, -250)
-    Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Frame.Size = UDim2.new(0, 400, 0, 600)
+    Frame.Position = UDim2.new(0.5, -200, 0.5, -300)
+    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Frame.BorderSizePixel = 0
     Frame.Active = true
     Frame.Draggable = true
 
     local Title = Instance.new("TextLabel", Frame)
     Title.Size = UDim2.new(1, 0, 0, 50)
-    Title.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-    Title.Text = "Menu de Hacks - Aprimorado"
+    Title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Title.Text = "Menu de Hacks Aprimorado"
     Title.TextColor3 = Color3.new(1, 1, 1)
     Title.TextScaled = true
     Title.Font = Enum.Font.SourceSansBold
 
     local UIListLayout = Instance.new("UIListLayout", Frame)
-    UIListLayout.Padding = UDim.new(0, 5)
+    UIListLayout.Padding = UDim.new(0, 10)
     UIListLayout.FillDirection = Enum.FillDirection.Vertical
     UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-    local function CreateButton(name, callback)
+    local function CreateToggleButton(name, stateCallback)
         local btn = Instance.new("TextButton", Frame)
-        btn.Size = UDim2.new(1, -20, 0, 40)
-        btn.Text = name
+        btn.Size = UDim2.new(1, -40, 0, 40)
+        btn.Text = name .. " (Desativado)"
         btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
         btn.TextColor3 = Color3.new(1, 1, 1)
         btn.Font = Enum.Font.SourceSans
         btn.TextSize = 18
-        btn.MouseButton1Click:Connect(callback)
+
+        local isActive = false
+        btn.MouseButton1Click:Connect(function()
+            isActive = not isActive
+            btn.Text = name .. (isActive and " (Ativado)" or " (Desativado)")
+            btn.BackgroundColor3 = isActive and Color3.fromRGB(0, 128, 0) or Color3.fromRGB(45, 45, 45)
+            stateCallback(isActive)
+        end)
     end
 
-    CreateButton("Ativar Voo", funcs.Fly)
-    CreateButton("Ativar NoClip", funcs.NoClip)
-    CreateButton("Super Pulo", funcs.SuperJump)
-    CreateButton("Speed Hack", funcs.Speed)
-    CreateButton("Teleportar para Cima", funcs.TeleportUp)
-    CreateButton("Resetar Personagem", funcs.ResetCharacter)
-    CreateButton("Toggle ESP (Com Nome)", funcs.ToggleESP)
-    CreateButton("Toggle God Mode", funcs.GodMode)
-    CreateButton("Remover GUI", function() ScreenGui:Destroy() end)
+    -- Criar botões de ativar/desativar
+    CreateToggleButton("Ativar Voo", funcs.Fly)
+    CreateToggleButton("Ativar NoClip", funcs.NoClip)
+    CreateToggleButton("Toggle ESP (Com Nome)", funcs.ToggleESP)
+    CreateToggleButton("God Mode", funcs.GodMode)
+
+    local RemoveGuiButton = Instance.new("TextButton", Frame)
+    RemoveGuiButton.Size = UDim2.new(1, -40, 0, 40)
+    RemoveGuiButton.Text = "Remover GUI"
+    RemoveGuiButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    RemoveGuiButton.TextColor3 = Color3.new(1, 1, 1)
+    RemoveGuiButton.Font = Enum.Font.SourceSansBold
+    RemoveGuiButton.TextSize = 18
+    RemoveGuiButton.MouseButton1Click:Connect(function()
+        ScreenGui:Destroy()
+    end)
+end
+
+-- Função de desinjetar
+function funcs.Desinject()
+    _G.ESPEnabled = false
+    isFlying = false
+    noclipActive = false
+
+    -- Remover ESP
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("Highlight") and obj.Name == "ESPHighlight" then
+            obj:Destroy()
+        end
+        if obj:IsA("BillboardGui") and obj.Name == "ESPName" then
+            obj:Destroy()
+        end
+    end
+
+    -- Remover GUI
+    if game.CoreGui:FindFirstChild("ScreenGui") then
+        game.CoreGui.ScreenGui:Destroy()
+    end
+
+    print("Script desinjetado com sucesso!")
 end
 
 -- Funções principais
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = function() return LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait() end
-local mt = getrawmetatable(game)
-setreadonly(mt, false)
-local oldNamecall = mt.__namecall
+local UserInputService = game:GetService("UserInputService")
 
-function funcs.Fly()
-    local torso = Character():WaitForChild("HumanoidRootPart")
-    local flying = false
-    local bv = Instance.new("BodyVelocity", torso)
-    bv.Velocity = Vector3.zero
-    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+function funcs.Fly(state)
+    if state then
+        local torso = Character():WaitForChild("HumanoidRootPart")
+        local bv = Instance.new("BodyVelocity", torso)
+        bv.Velocity = Vector3.zero
+        bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+        isFlying = true
 
-    local UIS = game:GetService("UserInputService")
-    UIS.InputBegan:Connect(function(input)
-        if input.KeyCode == Enum.KeyCode.Space then
-            flying = not flying
-        end
-    end)
-
-    game:GetService("RunService").RenderStepped:Connect(function()
-        if flying then
-            bv.Velocity = Vector3.new(0, 50, 0) + LocalPlayer:GetMouse().Hit.lookVector * 50
-        else
-            bv.Velocity = Vector3.zero
-        end
-    end)
-end
-
-function funcs.NoClip()
-    game:GetService("RunService").Stepped:Connect(function()
-        for _, v in pairs(Character():GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.CanCollide = false
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if isFlying then
+                local moveVector = Vector3.zero
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                    moveVector = moveVector + workspace.CurrentCamera.CFrame.LookVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                    moveVector = moveVector - workspace.CurrentCamera.CFrame.LookVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                    moveVector = moveVector - workspace.CurrentCamera.CFrame.RightVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                    moveVector = moveVector + workspace.CurrentCamera.CFrame.RightVector
+                end
+                bv.Velocity = moveVector * 50
+            else
+                bv.Velocity = Vector3.zero
+                bv:Destroy()
             end
-        end
-    end)
-
-    -- Bypass integrado
-    mt.__namecall = newcclosure(function(self, ...)
-        local args = {...}
-        if tostring(self) == "Kick" then
-            return
-        end
-        return oldNamecall(self, unpack(args))
-    end)
-end
-
-function funcs.SuperJump()
-    Character():FindFirstChildOfClass("Humanoid").JumpPower = 150
-
-    -- Proteção para evitar detecção
-    for _, v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
-        v:Disable()
+        end)
+    else
+        isFlying = false
     end
 end
 
-function funcs.Speed()
-    Character():FindFirstChildOfClass("Humanoid").WalkSpeed = 100
-
-    -- Bypass para impedir detecção
-    mt.__namecall = newcclosure(function(self, ...)
-        local args = {...}
-        if tostring(self) == "Kick" then
-            return
-        end
-        return oldNamecall(self, unpack(args))
-    end)
-end
-
-function funcs.TeleportUp()
-    Character():MoveTo(Character().HumanoidRootPart.Position + Vector3.new(0, 50, 0))
-end
-
-function funcs.ResetCharacter()
-    Character():BreakJoints()
-end
-
-function funcs.ToggleESP()
-    if _G.ESPEnabled then
-        _G.ESPEnabled = false
-        for _, obj in pairs(workspace:GetDescendants()) do
-            if obj:IsA("Highlight") and obj.Name == "ESPHighlight" then
-                obj:Destroy()
+function funcs.NoClip(state)
+    noclipActive = state
+    if noclipActive then
+        game:GetService("RunService").Stepped:Connect(function()
+            if noclipActive then
+                for _, v in pairs(Character():GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = false
+                    end
+                end
             end
-            if obj:IsA("BillboardGui") and obj.Name == "ESPName" then
-                obj:Destroy()
-            end
-        end
-    else
+        end)
+    end
+end
+
+function funcs.ToggleESP(state)
+    if state then
         _G.ESPEnabled = true
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= LocalPlayer and player.Character then
@@ -165,19 +170,25 @@ function funcs.ToggleESP()
                 textLabel.Font = Enum.Font.SourceSansBold
             end
         end
+    else
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("Highlight") and obj.Name == "ESPHighlight" then
+                obj:Destroy()
+            end
+            if obj:IsA("BillboardGui") and obj.Name == "ESPName" then
+                obj:Destroy()
+            end
+        end
     end
 end
 
-function funcs.GodMode()
-    local humanoid = Character():FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.MaxHealth = math.huge
-        humanoid.Health = math.huge
-    end
-
-    -- Proteção contra detecção
-    for _, v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
-        v:Disable()
+function funcs.GodMode(state)
+    if state then
+        local humanoid = Character():FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.MaxHealth = math.huge
+            humanoid.Health = math.huge
+        end
     end
 end
 
