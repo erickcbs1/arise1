@@ -5,9 +5,12 @@ local gui = {}
 local funcs = {}
 local isFlying = false
 local noclipActive = false
+local guiVisible = true -- Para controlar a visibilidade da GUI
 
 function gui:Setup(funcs)
     local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    ScreenGui.Name = "ScriptGui"
+
     local Frame = Instance.new("Frame", ScreenGui)
     Frame.Size = UDim2.new(0, 400, 0, 600)
     Frame.Position = UDim2.new(0.5, -200, 0.5, -300)
@@ -15,6 +18,7 @@ function gui:Setup(funcs)
     Frame.BorderSizePixel = 0
     Frame.Active = true
     Frame.Draggable = true
+    Frame.Name = "MainFrame"
 
     local Title = Instance.new("TextLabel", Frame)
     Title.Size = UDim2.new(1, 0, 0, 50)
@@ -23,6 +27,7 @@ function gui:Setup(funcs)
     Title.TextColor3 = Color3.new(1, 1, 1)
     Title.TextScaled = true
     Title.Font = Enum.Font.SourceSansBold
+    Title.Name = "Title"
 
     local UIListLayout = Instance.new("UIListLayout", Frame)
     UIListLayout.Padding = UDim.new(0, 10)
@@ -63,30 +68,15 @@ function gui:Setup(funcs)
     RemoveGuiButton.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
-end
 
--- Função de desinjetar
-function funcs.Desinject()
-    _G.ESPEnabled = false
-    isFlying = false
-    noclipActive = false
-
-    -- Remover ESP
-    for _, obj in pairs(workspace:GetDescendants()) do
-        if obj:IsA("Highlight") and obj.Name == "ESPHighlight" then
-            obj:Destroy()
+    -- Evento para minimizar/restaurar a GUI
+    local UserInputService = game:GetService("UserInputService")
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if input.KeyCode == Enum.KeyCode.LeftControl and not gameProcessed then
+            guiVisible = not guiVisible
+            Frame.Visible = guiVisible
         end
-        if obj:IsA("BillboardGui") and obj.Name == "ESPName" then
-            obj:Destroy()
-        end
-    end
-
-    -- Remover GUI
-    if game.CoreGui:FindFirstChild("ScreenGui") then
-        game.CoreGui.ScreenGui:Destroy()
-    end
-
-    print("Script desinjetado com sucesso!")
+    end)
 end
 
 -- Funções principais
