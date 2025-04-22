@@ -7,21 +7,34 @@ local funcs = {}
 function gui:Setup(funcs)
     local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
     local Frame = Instance.new("Frame", ScreenGui)
-    Frame.Size = UDim2.new(0, 250, 0, 320)
-    Frame.Position = UDim2.new(0.5, -125, 0.5, -160)
-    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Frame.Size = UDim2.new(0, 300, 0, 400)
+    Frame.Position = UDim2.new(0.5, -150, 0.5, -200)
+    Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Frame.BorderSizePixel = 0
     Frame.Active = true
     Frame.Draggable = true
 
+    local Title = Instance.new("TextLabel", Frame)
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    Title.Text = "Menu de Hacks"
+    Title.TextColor3 = Color3.new(1, 1, 1)
+    Title.TextScaled = true
+    Title.Font = Enum.Font.SourceSansBold
+
     local UIListLayout = Instance.new("UIListLayout", Frame)
     UIListLayout.Padding = UDim.new(0, 5)
+    UIListLayout.FillDirection = Enum.FillDirection.Vertical
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
     local function CreateButton(name, callback)
         local btn = Instance.new("TextButton", Frame)
-        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.Size = UDim2.new(1, -20, 0, 30)
         btn.Text = name
         btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
         btn.TextColor3 = Color3.new(1, 1, 1)
+        btn.Font = Enum.Font.SourceSans
+        btn.TextSize = 16
         btn.MouseButton1Click:Connect(callback)
     end
 
@@ -31,7 +44,8 @@ function gui:Setup(funcs)
     CreateButton("Speed Hack", funcs.Speed)
     CreateButton("Teleportar para Cima", funcs.TeleportUp)
     CreateButton("Resetar Personagem", funcs.ResetCharacter)
-    CreateButton("Toggle ESP", funcs.ToggleESP)
+    CreateButton("Bypass Anti-Cheat", funcs.BypassAntiCheat)
+    CreateButton("Toggle ESP (Com Nome)", funcs.ToggleESP)
 end
 
 -- Funções principais
@@ -41,13 +55,23 @@ local Character = function() return LocalPlayer.Character or LocalPlayer.Charact
 
 function funcs.Fly()
     local torso = Character():WaitForChild("HumanoidRootPart")
-    local flying = true
+    local flying = false
     local bv = Instance.new("BodyVelocity", torso)
-    bv.Velocity = Vector3.new(0, 0, 0)
-    bv.MaxForce = Vector3.new(100000, 100000, 100000)
+    bv.Velocity = Vector3.zero
+    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+
+    local UIS = game:GetService("UserInputService")
+    UIS.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.Space then
+            flying = not flying
+        end
+    end)
+
     game:GetService("RunService").RenderStepped:Connect(function()
         if flying then
-            bv.Velocity = LocalPlayer:GetMouse().Hit.lookVector * 50
+            bv.Velocity = Vector3.new(0, 50, 0) + LocalPlayer:GetMouse().Hit.lookVector * 50
+        else
+            bv.Velocity = Vector3.zero
         end
     end)
 end
@@ -78,6 +102,21 @@ function funcs.ResetCharacter()
     Character():BreakJoints()
 end
 
+function funcs.BypassAntiCheat()
+    for _, v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
+        v:Disable() -- Desativa logs relacionados a exploits
+    end
+    setreadonly(mt, false)
+    mt.__namecall = newcclosure(function(self, ...)
+        local args = {...}
+        if tostring(self) == "Kick" then
+            return
+        end
+        return oldNamecall(self, unpack(args))
+    end)
+    setreadonly(mt, true)
+end
+
 function funcs.ToggleESP()
     if _G.ESPEnabled then
         _G.ESPEnabled = false
@@ -95,6 +134,19 @@ function funcs.ToggleESP()
                 highlight.FillColor = Color3.new(1, 0, 0)
                 highlight.OutlineColor = Color3.new(1, 1, 1)
                 highlight.Parent = player.Character
+
+                local billboard = Instance.new("BillboardGui", player.Character)
+                billboard.Name = "ESPName"
+                billboard.Size = UDim2.new(0, 100, 0, 50)
+                billboard.Adornee = player.Character:WaitForChild("HumanoidRootPart")
+                billboard.AlwaysOnTop = true
+
+                local textLabel = Instance.new("TextLabel", billboard)
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.Text = player.Name
+                textLabel.TextColor3 = Color3.new(1, 1, 1)
+                textLabel.TextScaled = true
             end
         end
     end
