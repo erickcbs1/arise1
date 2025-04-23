@@ -1,11 +1,11 @@
 -- Module Manager - Handles all hack modules
 local ModuleManager = {}
-local FlyModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/modules/fly.lua"))()
-local NoClipModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/modules/noclip.lua"))()
-local ESPModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/modules/esp.lua"))()
-local GodModeModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/modules/godmode.lua"))()
-local SpeedModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/modules/speed.lua"))()
-local JumpModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/modules/jump.lua"))()
+local FlyModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/fly.lua"))()
+local NoClipModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/noclip.lua"))()
+local ESPModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/esp.lua"))()
+local GodModeModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/godmode.lua"))()
+local SpeedModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/speed.lua"))()
+local JumpModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/jump.lua"))()
 
 -- Initialize module manager
 function ModuleManager:Initialize(framework)
