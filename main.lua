@@ -5,6 +5,7 @@
 local Utils = {}
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local ThirdPartyUserService = game:GetService("ThirdPartyUserService")
 local LocalPlayer = Players.LocalPlayer
 
 -- Check if value is valid
