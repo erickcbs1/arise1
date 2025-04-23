@@ -1,6 +1,6 @@
 -- GUI Components - Reusable UI elements
 local Components = {}
-local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/gui/theme.lua"))()
+local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/gui/theme.lua"))()
 local TweenService = game:GetService("TweenService")
 
 -- Create the main frame
