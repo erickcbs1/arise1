@@ -1,8 +1,3 @@
-
-
---[[ FILE: utils.lua ]]--
-
--- Utility Functions
 local Utils = {}
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -289,13 +284,6 @@ function Theme:SwitchTheme(themeName)
 end
 
 return Theme
-
---[[ FILE: gui/components.lua ]]--
-
--- GUI Components - Reusable UI elements
-local Components = {}
-local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/gui/theme.lua"))()
-local TweenService = game:GetService("TweenService")
 
 -- Create the main frame
 function Components:CreateMainFrame(config)
@@ -853,14 +841,6 @@ end
 
 return Components
 
-
---[[ FILE: gui/manager.lua ]]--
-
--- GUI Manager - Handles all GUI elements
-local GuiManager = {}
-local Components = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/gui/components.lua"))()
-local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/ariser1/main/gui/theme.lua"))()
-
 -- Initialize GUI
 function GuiManager:Initialize(config)
     self.config = config
@@ -1039,17 +1019,6 @@ end
 
 return GuiManager
 
-
---[[ FILE: modules/manager.lua ]]--
-
--- Module Manager - Handles all hack modules
-local ModuleManager = {}
-local FlyModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/fly.lua"))()
-local NoClipModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/noclip.lua"))()
-local ESPModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/esp.lua"))()
-local GodModeModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/godmode.lua"))()
-local SpeedModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/speed.lua"))()
-local JumpModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/jump.lua"))()
 
 -- Initialize module manager
 function ModuleManager:Initialize(framework)
@@ -2299,14 +2268,6 @@ function SpeedModule:applySettings(settings)
 end
 
 return SpeedModule
-
---[[ FILE: hackframework.lua ]]--
-
--- Hack Framework - Main Handler
-local HackFramework = {}
-local GuiManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/gui/manager.lua"))()
-local ModuleManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/manager.lua"))()
-local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/utils.lua"))()
 
 -- Framework initialization
 function HackFramework:Initialize(config)
