@@ -2,7 +2,7 @@
 -- All components are loaded via HttpGet
 
 -- Base URL for raw GitHub content
-local baseUrl = "https://raw.githubusercontent.com/erickcbs1/arise1/main/main.lua"
+local baseUrl = "https://raw.githubusercontent.com/erickcbs1/arise1/main/"
 
 -- Utility function to load modules with error handling
 local function loadModule(path)
