@@ -548,4 +548,13 @@ function Components:CreateSlider(name, min, max, default, callback)
     return sliderFrame
 end
 
+function Components:UpdateToggleState(bg, handle, enabled)
+	local goal = enabled and {BackgroundColor3 = Theme.Current.toggleOn, Position = UDim2.new(1, -22, 0.5, -10)} 
+	                          or {BackgroundColor3 = Theme.Current.toggleOff, Position = UDim2.new(0, 2, 0.5, -10)}
+
+	TweenService:Create(bg, TweenInfo.new(0.3), {BackgroundColor3 = goal.BackgroundColor3}):Play()
+	TweenService:Create(handle, TweenInfo.new(0.3), {Position = goal.Position}):Play()
+end
+
+
 return Components
