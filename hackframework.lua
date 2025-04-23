@@ -1,8 +1,8 @@
 -- Hack Framework - Main Handler
 local HackFramework = {}
-local GuiManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/repository/main/gui/manager.lua"))()
-local ModuleManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/repository/main/modules/manager.lua"))()
-local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/repository/main/utils.lua"))()
+local GuiManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/gui/manager.lua"))()
+local ModuleManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/modules/manager.lua"))()
+local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/utils.lua"))()
 
 -- Framework initialization
 function HackFramework:Initialize(config)
