@@ -1,3 +1,7 @@
+
+
+-- --[[ UTILS ]] --
+
 local Utils = {}
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -842,6 +846,10 @@ end
 return Components
 
 -- Initialize GUI
+
+
+-- --[[ GUI MANAGER ]] --
+
 function GuiManager:Initialize(config)
     self.config = config
     self.visible = true
@@ -1021,6 +1029,10 @@ return GuiManager
 
 
 -- Initialize module manager
+
+
+-- --[[ MODULE MANAGER ]] --
+
 function ModuleManager:Initialize(framework)
     self.framework = framework
     self.modules = {}
@@ -1150,6 +1162,10 @@ return ModuleManager
 --[[ FILE: modules/esp.lua ]]--
 
 -- ESP Module
+
+
+-- --[[ MODULE: ESP ]] --
+
 local ESPModule = {}
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -1497,6 +1513,10 @@ return ESPModule
 --[[ FILE: modules/fly.lua ]]--
 
 -- Fly Module
+
+
+-- --[[ MODULE: FLY ]] --
+
 local FlyModule = {}
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -1654,6 +1674,10 @@ return FlyModule
 --[[ FILE: modules/godmode.lua ]]--
 
 -- God Mode Module
+
+
+-- --[[ MODULE: GODMODE ]] --
+
 local GodModeModule = {}
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -1846,6 +1870,10 @@ return GodModeModule
 --[[ FILE: modules/jump.lua ]]--
 
 -- Jump Module
+
+
+-- --[[ MODULE: JUMP ]] --
+
 local JumpModule = {}
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -2017,6 +2045,10 @@ return JumpModule
 --[[ FILE: modules/noclip.lua ]]--
 
 -- NoClip Module
+
+
+-- --[[ MODULE: NOCLIP ]] --
+
 local NoClipModule = {}
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -2123,6 +2155,10 @@ return NoClipModule
 --[[ FILE: modules/speed.lua ]]--
 
 -- Speed Module
+
+
+-- --[[ MODULE: SPEED ]] --
+
 local SpeedModule = {}
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -2270,6 +2306,10 @@ end
 return SpeedModule
 
 -- Framework initialization
+
+
+-- --[[ FRAMEWORK ]] --
+
 function HackFramework:Initialize(config)
     self.config = config or {}
     self.active = true
