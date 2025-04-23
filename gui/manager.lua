@@ -1,7 +1,7 @@
 -- GUI Manager - Handles all GUI elements
 local GuiManager = {}
-local Components = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/gui/components.lua"))()
-local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/username/repository/main/gui/theme.lua"))()
+local Components = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/arise1/main/gui/components.lua"))()
+local Theme = loadstring(game:HttpGet("https://raw.githubusercontent.com/erickcbs1/ariser1/main/gui/theme.lua"))()
 
 -- Initialize GUI
 function GuiManager:Initialize(config)
