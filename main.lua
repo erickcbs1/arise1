@@ -14,19 +14,21 @@ local function loadModule(path)
         warn("Failed to fetch module: " .. path .. "\nError: " .. tostring(content))
         return nil
     end
-    
+
     -- Add error context to help with debugging
     local wrapped = string.format([[
-        local module = {}
         local success, result = pcall(function()
-            %s
+            local moduleFunc = function()
+                %s
+            end
+            return moduleFunc()
         end)
-        
+
         if not success then
             warn("Error in module: %s\n" .. result)
             return nil
         end
-        
+
         return result
     ]], content, path)
     
@@ -36,8 +38,8 @@ local function loadModule(path)
         return nil
     end
     
-    local success, result = pcall(func)
-    if not success then
+    local successExec, result = pcall(func)
+    if not successExec then
         warn("Failed to execute module: " .. path .. "\nError: " .. tostring(result))
         return nil
     end
